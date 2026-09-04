@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type FormEventHandler } from "react";
 import { Manrope, Inter } from "next/font/google";
+import { useRouter } from "next/navigation";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ const JOURNEY_STAGES: { label: string; done: boolean }[] = [
 ];
 
 export default function LoginPage() {
+  const router = useRouter();
   const [role, setRole] = useState<Role>("professor");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -32,13 +34,19 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setSubmitting(true);
-    // TODO: substituir pela chamada real de autenticação (ex: /api/auth/login)
-    await new Promise((r) => setTimeout(r, 700));
-    setSubmitting(false);
+async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+  setSubmitting(true);
+
+  await new Promise((resolve) => setTimeout(resolve, 700));
+
+  if (role === "professor") {
+    router.push("/professor/inicio");
+    return;
   }
+
+  router.push("/aluno/inicio");
+}
 
   return (
     <div
@@ -227,8 +235,4 @@ function TrackMark() {
     </svg>
   );
 
-}
-
-function setMostrarSenha(arg0: (prev: any) => boolean) {
-  throw new Error("Function not implemented.");
 }
