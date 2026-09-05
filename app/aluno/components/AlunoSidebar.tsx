@@ -1,40 +1,19 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const menuItems = [
-  {
-    nome: "Início",
-    href: "/professor/inicio",
-  },
-  {
-    nome: "Dashboard",
-    href: "/professor/dashboard",
-  },
-  {
-    nome: "Turmas",
-    href: "/professor/turmas",
-  },
-  {
-    nome: "Projetos",
-    href: "/professor/projetos",
-  },
-  {
-    nome: "Entregas",
-    href: "/professor/entregas",
-  },
-  {
-    nome: "Devolutivas",
-    href: "/professor/devolutivas",
-  },
-  {
-    nome: "Notificações",
-    href: "/professor/notificacoes",
-  },
+  { nome: "Início", href: "/aluno/inicio" },
+  { nome: "Dashboard", href: "/aluno/dashboard" },
+  { nome: "Meu projeto", href: "/aluno/meu-projeto" },
+  { nome: "Tarefas", href: "/aluno/tarefas" },
+  { nome: "Versões", href: "/aluno/versoes" },
+  { nome: "Devolutivas", href: "/aluno/devolutivas" },
+  { nome: "Notificações", href: "/aluno/notificacoes" },
 ];
 
-export default function ProfessorSidebar() {
+export default function AlunoSidebar() {
   const pathname = usePathname();
 
   return (
@@ -49,7 +28,7 @@ export default function ProfessorSidebar() {
 
       <nav className="mt-5 lg:mt-10">
         <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-white/50">
-          Área do professor
+          Área do aluno
         </p>
 
         <ul className="flex gap-2 overflow-x-auto pb-1 lg:flex-col lg:space-y-2 lg:overflow-visible lg:pb-0">

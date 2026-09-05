@@ -1,6 +1,6 @@
 export default function DashboardProfessorPage() {
   return (
-    <main className="min-h-screen bg-[#F5F7FA] px-6 py-8 lg:px-10">
+    <main className="min-h-screen bg-[#F5F7FA] px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
       <header className="border-b border-[#172033]/10 pb-6">
         <p className="text-sm font-medium text-[#6366F1]">
           Área do professor
@@ -15,7 +15,7 @@ export default function DashboardProfessorPage() {
         </p>
       </header>
 
-      <section className="mt-8 rounded-2xl border border-[#172033]/10 bg-white p-6">
+      <section className="mt-8 rounded-xl border border-[#172033]/10 bg-white p-4 sm:rounded-2xl sm:p-6">
         <p className="text-sm text-[#172033]/60">
           Os indicadores do professor serão adicionados nesta página.
         </p>

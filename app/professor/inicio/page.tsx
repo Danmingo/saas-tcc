@@ -1,13 +1,13 @@
 export default function InicioProfessorPage() {
   return (
-    <main className="min-h-screen bg-[#F5F7FA] px-6 py-8 lg:px-10">
+    <main className="min-h-screen bg-[#F5F7FA] px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
       <header className="flex flex-col gap-4 border-b border-[#172033]/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-medium text-[#6366F1]">
             Área do professor
           </p>
 
-          <h1 className="mt-1 text-3xl font-bold text-[#172033]">
+          <h1 className="mt-1 text-2xl font-bold text-[#172033] sm:text-3xl">
             Olá, professor
           </h1>
 
@@ -24,7 +24,7 @@ export default function InicioProfessorPage() {
         </button>
       </header>
 
-      <section className="mt-8 rounded-2xl border border-[#172033]/10 bg-white p-6">
+      <section className="mt-8 rounded-xl border border-[#172033]/10 bg-white p-4 sm:rounded-2xl sm:p-6">
         <p className="text-sm font-semibold text-[#6366F1]">
           Próxima ação
         </p>

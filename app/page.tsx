@@ -34,7 +34,7 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
-async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
   e.preventDefault();
   setSubmitting(true);
 
@@ -46,7 +46,7 @@ async function handleSubmit(e: FormEvent<HTMLFormElement>) {
   }
 
   router.push("/aluno/inicio");
-}
+};
 
   return (
     <div

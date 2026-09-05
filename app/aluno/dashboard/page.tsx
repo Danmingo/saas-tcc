@@ -3,15 +3,15 @@
     <main className="min-h-screen bg-[#F5F7FA] px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
       <header className="border-b border-[#172033]/10 pb-6">
         <p className="text-sm font-medium text-[#6366F1]">
-          Área do professor
+          Área do aluno
         </p>
 
         <h1 className="mt-1 text-3xl font-bold text-[#172033]">
-          Entregas
+          Dashboard
         </h1>
 
         <p className="mt-2 text-sm text-[#172033]/60">
-          Visualize os documentos enviados e as revisões pendentes.
+          Acompanhe o progresso, os prazos e as atividades do seu TCC.
         </p>
       </header>
 
@@ -21,8 +21,8 @@
         </h2>
 
         <p className="mt-2 text-sm leading-6 text-[#172033]/60">
-          Esta área já faz parte da navegação do protótipo e receberá suas
-          funcionalidades nas próximas etapas.
+          Esta página já faz parte da navegação do protótipo e receberá
+          suas funcionalidades nas próximas etapas.
         </p>
       </section>
     </main>

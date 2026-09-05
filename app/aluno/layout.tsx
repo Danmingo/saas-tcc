@@ -1,16 +1,16 @@
-import type { ReactNode } from "react";
-import ProfessorSidebar from "./components/ProfessorSidebar";
+﻿import type { ReactNode } from "react";
+import AlunoSidebar from "./components/AlunoSidebar";
 
-type ProfessorLayoutProps = {
+type AlunoLayoutProps = {
   children: ReactNode;
 };
 
-export default function ProfessorLayout({
+export default function AlunoLayout({
   children,
-}: ProfessorLayoutProps) {
+}: AlunoLayoutProps) {
   return (
     <div className="min-h-screen bg-[#F5F7FA] lg:flex">
-      <ProfessorSidebar />
+      <AlunoSidebar />
 
       <div className="min-w-0 flex-1">
         <div className="mx-auto w-full max-w-7xl">

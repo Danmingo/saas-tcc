@@ -17,7 +17,7 @@ const turmas = [
 
 export default function TurmasProfessorPage() {
   return (
-    <main className="min-h-screen bg-[#F5F7FA] px-6 py-8 lg:px-10">
+    <main className="min-h-screen bg-[#F5F7FA] px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
       <header className="flex flex-col gap-4 border-b border-[#172033]/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-medium text-[#6366F1]">
@@ -46,7 +46,7 @@ export default function TurmasProfessorPage() {
           {turmas.map((turma) => (
             <article
               key={turma.id}
-              className="rounded-2xl border border-[#172033]/10 bg-white p-6 shadow-sm"
+              className="rounded-xl border border-[#172033]/10 bg-white p-4 shadow-sm sm:rounded-2xl sm:p-6"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
