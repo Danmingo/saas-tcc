@@ -49,6 +49,7 @@ export default function ProfessorSidebar() {
           height={188}
           sizes="224px"
           className="h-auto w-56 max-w-full"
+          priority
         />
       </div>
 
