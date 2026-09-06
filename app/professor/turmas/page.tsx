@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const turmas = [
   {
     id: 1,
@@ -33,12 +35,12 @@ export default function TurmasProfessorPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          className="rounded-lg bg-[#6366F1] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#4F52D9]"
+        <Link
+          href="/professor/turmas/nova"
+          className="rounded-lg bg-[#6366F1] px-5 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-[#4F52D9]"
         >
           Criar turma
-        </button>
+        </Link>
       </header>
 
       <section className="mt-8">
