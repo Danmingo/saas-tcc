@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import LogoutButton from "@/app/components/LogoutButton";
 
 const menuItems = [
   { nome: "Início", href: "/aluno/inicio" },
@@ -52,6 +53,7 @@ export default function AlunoSidebar() {
           })}
         </ul>
       </nav>
+      <LogoutButton />
     </aside>
   );
 }

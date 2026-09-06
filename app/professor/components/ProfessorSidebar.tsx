@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
+import LogoutButton from "@/app/components/LogoutButton";
 
 const menuItems = [
   {
@@ -39,12 +41,15 @@ export default function ProfessorSidebar() {
 
   return (
     <aside className="w-full shrink-0 bg-[#1E3A5F] px-4 py-4 text-white lg:min-h-screen lg:w-64 lg:px-6 lg:py-6">
-      <div className="flex items-center gap-3">
-        <TrackMark />
-
-        <span className="text-lg font-bold">
-          ThesisTrack
-        </span>
+      <div className="-mx-2 flex h-12 items-center">
+        <Image
+          src="/thesistrack-logos/logo_horizontal_negative.png"
+          alt="ThesisTrack"
+          width={1162}
+          height={188}
+          sizes="224px"
+          className="h-auto w-56 max-w-full"
+        />
       </div>
 
       <nav className="mt-5 lg:mt-10">
@@ -73,40 +78,7 @@ export default function ProfessorSidebar() {
           })}
         </ul>
       </nav>
+      <LogoutButton />
     </aside>
-  );
-}
-
-function TrackMark() {
-  return (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 28 28"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <rect
-        width="28"
-        height="28"
-        rx="7"
-        fill="#6366F1"
-      />
-
-      <path
-        d="M8 9H20M14 9V19"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-
-      <circle
-        cx="20"
-        cy="19"
-        r="2"
-        fill="#22C55E"
-      />
-    </svg>
   );
 }

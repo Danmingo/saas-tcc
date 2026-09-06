@@ -1,14 +1,14 @@
+import ProfessorGreeting from "@/app/professor/components/ProfessorGreeting";
+
 export default function InicioProfessorPage() {
   return (
     <main className="min-h-screen bg-[#F5F7FA] px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
       <header className="flex flex-col gap-4 border-b border-[#172033]/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-medium text-[#6366F1]">
-            Área do professor
-          </p>
+          <ProfessorGreeting />
 
           <h1 className="mt-1 text-2xl font-bold text-[#172033] sm:text-3xl">
-            Olá, professor
+            Início
           </h1>
 
           <p className="mt-2 text-sm text-[#172033]/60">

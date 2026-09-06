@@ -3,6 +3,7 @@
 import { useState, type FormEventHandler } from "react";
 import { Manrope, Inter } from "next/font/google";
 import { useRouter } from "next/navigation";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -26,27 +27,57 @@ const JOURNEY_STAGES: { label: string; done: boolean }[] = [
 ];
 
 export default function LoginPage() {
+  const supabase = createSupabaseBrowserClient();
   const router = useRouter();
   const [role, setRole] = useState<Role>("professor");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [manterConectado, setManterConectado] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [erro, setErro] = useState("");
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
-const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-  e.preventDefault();
-  setSubmitting(true);
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    setErro("");
+    setSubmitting(true);
 
-  await new Promise((resolve) => setTimeout(resolve, 700));
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password: senha,
+      });
 
-  if (role === "professor") {
-    router.push("/professor/inicio");
-    return;
-  }
+      if (error) {
+        setErro("E-mail ou senha inválidos.");
+        return;
+      }
 
-  router.push("/aluno/inicio");
-};
+      const { data: perfil, error: perfilError } = await supabase
+        .from("usuarios")
+        .select("papel")
+        .eq("id", data.user.id)
+        .single();
+
+      if (
+        perfilError ||
+        !perfil ||
+        (perfil.papel !== "professor" && perfil.papel !== "aluno")
+      ) {
+        await supabase.auth.signOut({ scope: "local" });
+        setErro("Não foi possível carregar um perfil com acesso válido.");
+        return;
+      }
+
+      // O seletor visual não concede acesso: o destino vem de usuarios.papel.
+      router.replace(`/${perfil.papel}/inicio`);
+      router.refresh();
+    } catch {
+      setErro("Não foi possível entrar. Tente novamente.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div
@@ -192,6 +223,12 @@ const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
                 Esqueci minha senha
               </a>
             </div>
+            
+            {erro && (
+             <p className="text-sm text-red-600">
+               {erro}
+            </p>
+            )}
 
             <button
               type="submit"
