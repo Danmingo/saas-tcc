@@ -69,7 +69,21 @@ export default function LoginPage() {
         return;
       }
 
-      // O seletor visual não concede acesso: o destino vem de usuarios.papel.
+      if (perfil.papel !== role) {
+        const { error: signOutError } = await supabase.auth.signOut({ scope: "local" });
+        if (signOutError) {
+          setErro("Não foi possível encerrar a sessão desta conta. Tente novamente antes de continuar.");
+          return;
+        }
+        setErro(
+          perfil.papel === "professor"
+            ? "Esta conta pertence a um professor. Selecione Professor para entrar."
+            : "Esta conta pertence a um aluno. Selecione Aluno para entrar."
+        );
+        return;
+      }
+
+      // O seletor apenas confirma a escolha; a autorização vem de usuarios.papel.
       router.replace(`/${perfil.papel}/inicio`);
       router.refresh();
     } catch {

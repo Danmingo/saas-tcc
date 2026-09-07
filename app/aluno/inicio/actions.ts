@@ -42,8 +42,7 @@ export async function entrarNaTurma(
 
     switch (resultado?.motivo) {
       case "vinculado":
-        revalidatePath("/aluno/inicio");
-        redirect("/aluno/inicio?entrou=1");
+        break;
       case "ja_participa":
         return {
           erro: resultado.turma_nome

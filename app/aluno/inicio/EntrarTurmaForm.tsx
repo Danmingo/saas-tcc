@@ -26,7 +26,7 @@ export default function EntrarTurmaForm() {
           aria-invalid={Boolean(estado.erro)}
           aria-describedby={estado.erro ? "codigo-convite-erro" : undefined}
           placeholder="Ex.: ABCD2345"
-          className="min-w-0 flex-1 rounded-xl border border-[#172033]/15 bg-white px-3.5 py-2.5 text-sm uppercase outline-none transition-shadow placeholder:normal-case focus:border-[#6366F1] focus:ring-2 focus:ring-[#6366F1]/25 disabled:opacity-60"
+          className="min-w-0 flex-1 rounded-xl border border-[#172033]/15 bg-white px-3.5 py-2.5 text-sm text-[#172033] uppercase outline-none transition-shadow placeholder:normal-case focus:border-[#6366F1] focus:ring-2 focus:ring-[#6366F1]/25 disabled:opacity-60"
           disabled={enviando}
         />
         <button
