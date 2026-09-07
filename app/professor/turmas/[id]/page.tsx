@@ -3,20 +3,21 @@ import ProfessorGreeting from "@/app/professor/components/ProfessorGreeting";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import TurmaAcoes from "../components/TurmaAcoes";
-import { buscarTurma } from "@/lib/turmas";
+import Cronograma from "./entregas/Cronograma";
+import { buscarTurma, getProfessorContext } from "@/lib/turmas";
 
 type TurmaPageProps = {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ criada?: string | string[]; atualizada?: string | string[] }>;
+  searchParams: Promise<{ criada?: string | string[]; atualizada?: string | string[]; entrega?: string | string[] }>;
 };
 
 export default async function DetalhesTurmaPage({ params, searchParams }: TurmaPageProps) {
   const { id } = await params;
-  const turma = await buscarTurma(id);
+  const [turma, context] = await Promise.all([buscarTurma(id), getProfessorContext()]);
 
   if (!turma) notFound();
 
-  const { criada, atualizada } = await searchParams;
+  const { criada, atualizada, entrega } = await searchParams;
   const detalhes = [
     { label: "Curso", valor: turma.curso },
     { label: "Etapa/componente", valor: turma.etapa },
@@ -64,6 +65,8 @@ export default async function DetalhesTurmaPage({ params, searchParams }: TurmaP
       </section>
 
       <TurmaAcoes turmaId={String(turma.id)} />
+
+      <Cronograma context={context} turmaId={String(turma.id)} feedback={typeof entrega === "string" ? entrega : undefined} />
     </main>
   );
 }

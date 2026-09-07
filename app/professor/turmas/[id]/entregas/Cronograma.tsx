@@ -1,19 +1,19 @@
 import Link from "next/link";
 import { listarEntregas, type Entrega } from "@/lib/entregas";
 import { mensagemProjetoErro, type ProfessorContext } from "@/lib/projetos";
-import { formatarData } from "../../form-config";
+import { formatarData } from "@/app/professor/projetos/form-config";
 
-export default async function Cronograma({ context, projetoId, feedback }: {
-  context: ProfessorContext; projetoId: string; feedback?: string;
+export default async function Cronograma({ context, turmaId, feedback }: {
+  context: ProfessorContext; turmaId: string; feedback?: string;
 }) {
   let entregas: Entrega[] = [];
   let erro = "";
   try {
-    entregas = await listarEntregas(context, projetoId);
+    entregas = await listarEntregas(context, turmaId);
   } catch (error) {
     erro = mensagemProjetoErro(error);
   }
-  const base = "/professor/projetos/" + encodeURIComponent(projetoId) + "/entregas";
+  const base = "/professor/turmas/" + encodeURIComponent(turmaId) + "/entregas";
   return (
     <section id="cronograma" aria-labelledby="cronograma-titulo" className="mt-8 max-w-3xl rounded-2xl border border-[#172033]/10 bg-white p-4 shadow-sm sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -25,8 +25,8 @@ export default async function Cronograma({ context, projetoId, feedback }: {
           {feedback === "criada" ? "Entrega criada com sucesso." : "Entrega atualizada com sucesso."}
         </p>
       )}
-      {erro ? <p role="alert" className="mt-4 text-sm text-red-600">{erro}</p> : !entregas?.length ? (
-        <p className="mt-4 text-sm text-[#172033]/60">Nenhuma entrega cadastrada. Crie a primeira entrega para organizar o cronograma deste projeto.</p>
+      {erro ? <p role="alert" className="mt-4 text-sm text-red-600">{erro}</p> : !entregas.length ? (
+        <p className="mt-4 text-sm text-[#172033]/60">Nenhuma entrega cadastrada. Crie a primeira entrega para organizar o cronograma desta turma.</p>
       ) : (
         <ol className="mt-5 space-y-4">
           {entregas.map((entrega) => (

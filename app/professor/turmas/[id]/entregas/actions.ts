@@ -7,28 +7,28 @@ import { mensagemProjetoErro } from "@/lib/projetos";
 import { criarEntregaValidada, atualizarEntregaValidada } from "@/lib/entregas";
 import { EntregaValidacaoErro, type EntregaFormState } from "./form-config";
 
-export async function criarEntrega(projetoId: string, _state: EntregaFormState, form: FormData): Promise<EntregaFormState> {
+export async function criarEntrega(turmaId: string, _state: EntregaFormState, form: FormData): Promise<EntregaFormState> {
   const context = await getProfessorContext();
   try {
-    await criarEntregaValidada(context, projetoId, form);
+    await criarEntregaValidada(context, turmaId, form);
   } catch (error) {
     return { erro: error instanceof EntregaValidacaoErro ? error.message : mensagemProjetoErro(error) };
   }
-  const destino = "/professor/projetos/" + encodeURIComponent(projetoId);
+  const destino = "/professor/turmas/" + encodeURIComponent(turmaId);
   revalidatePath(destino);
   redirect(destino + "?entrega=criada#cronograma");
 }
 
 export async function atualizarEntrega(
-  projetoId: string, entregaId: string, _state: EntregaFormState, form: FormData,
+  turmaId: string, entregaId: string, _state: EntregaFormState, form: FormData,
 ): Promise<EntregaFormState> {
   const context = await getProfessorContext();
   try {
-    await atualizarEntregaValidada(context, projetoId, entregaId, form);
+    await atualizarEntregaValidada(context, turmaId, entregaId, form);
   } catch (error) {
     return { erro: error instanceof EntregaValidacaoErro ? error.message : mensagemProjetoErro(error) };
   }
-  const destino = "/professor/projetos/" + encodeURIComponent(projetoId);
+  const destino = "/professor/turmas/" + encodeURIComponent(turmaId);
   revalidatePath(destino);
   revalidatePath(destino + "/entregas/" + encodeURIComponent(entregaId) + "/editar");
   redirect(destino + "?entrega=atualizada#cronograma");

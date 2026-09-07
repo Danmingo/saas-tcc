@@ -13,7 +13,93 @@ type ResultadoAtualizacao = {
   motivo?: "atualizado" | "nao_autenticado" | "papel_invalido" | "sem_acesso" | "titulo_obrigatorio" | "projeto_inexistente";
 };
 
+type ResultadoCriacao = {
+  motivo?: "criado" | "nao_autenticado" | "papel_invalido" | "titulo_obrigatorio" | "sem_acesso_turma" | "integrante_invalido" | "integrante_ja_tem_projeto";
+  projeto_id?: string;
+};
+
 const limites = { titulo: 200, tema: 300, descricao: 5000 } as const;
+
+function textoForm(formData: FormData, nome: string) {
+  const valor = formData.get(nome);
+  if (valor !== null && typeof valor !== "string") return null;
+  return (valor ?? "").trim();
+}
+
+function uuidValido(valor: string) {
+  return /^[0-9a-fA-F-]{36}$/.test(valor);
+}
+
+export async function criarProjetoAluno(
+  _estadoAnterior: ProjetoAlunoFormState,
+  formData: FormData,
+): Promise<ProjetoAlunoFormState> {
+  const { supabase, aluno } = await getAlunoContext();
+  const turmaUuid = textoForm(formData, "turma_uuid");
+  const titulo = textoForm(formData, "titulo");
+  const tema = textoForm(formData, "tema");
+  const descricao = textoForm(formData, "descricao");
+  const integranteIds = [...new Set(formData.getAll("integrante_id"))];
+
+  if (turmaUuid === null || titulo === null || tema === null || descricao === null ||
+      integranteIds.some((id) => typeof id !== "string")) {
+    return { erro: "Informe valores válidos." };
+  }
+  if (!uuidValido(turmaUuid)) return { erro: "Selecione uma turma válida." };
+  if (!titulo) return { erro: "Informe o título do projeto." };
+  if (titulo.length > limites.titulo || tema.length > limites.tema || descricao.length > limites.descricao) {
+    return { erro: "Revise o tamanho dos campos informados." };
+  }
+
+  const colegas = integranteIds.filter((id): id is string => id !== aluno.id);
+  if (colegas.some((id) => !uuidValido(id))) return { erro: "Selecione integrantes válidos." };
+
+  try {
+    const { data: vinculo, error: vinculoError } = await supabase
+      .from("turma_alunos")
+      .select("turma_id")
+      .eq("turma_id", turmaUuid)
+      .eq("aluno_id", aluno.id)
+      .maybeSingle<{ turma_id: string }>();
+
+    if (vinculoError || !vinculo) return { erro: "Você não participa da turma selecionada." };
+
+    const { data, error } = await supabase.rpc("criar_projeto_aluno", {
+      turma_uuid: turmaUuid,
+      titulo_texto: titulo,
+      tema_texto: tema,
+      descricao_texto: descricao,
+      integrante_ids: colegas,
+    });
+
+    if (error) return { erro: "Não foi possível criar o projeto. Tente novamente." };
+
+    const resultado = data as ResultadoCriacao | null;
+    switch (resultado?.motivo) {
+      case "criado":
+        if (resultado.projeto_id) {
+          revalidatePath("/aluno/meu-projeto");
+          redirect("/aluno/meu-projeto?criado=1");
+        }
+        return { erro: "O projeto foi criado, mas não foi possível localizar seu identificador." };
+      case "titulo_obrigatorio":
+        return { erro: "Informe o título do projeto." };
+      case "sem_acesso_turma":
+        return { erro: "Você não participa da turma selecionada." };
+      case "integrante_invalido":
+        return { erro: "Selecione somente colegas da turma selecionada." };
+      case "integrante_ja_tem_projeto":
+        return { erro: "Um dos integrantes já possui um projeto nesta turma." };
+      case "nao_autenticado":
+      case "papel_invalido":
+        return { erro: "Não foi possível validar seu acesso. Tente novamente." };
+      default:
+        return { erro: "Não foi possível criar o projeto. Tente novamente." };
+    }
+  } catch {
+    return { erro: "Não foi possível confirmar a criação do projeto. Tente novamente." };
+  }
+}
 
 export async function atualizarConteudoProjetoAluno(
   projetoUuid: string,

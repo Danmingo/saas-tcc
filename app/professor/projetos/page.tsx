@@ -15,18 +15,17 @@ export default async function Page() {
   }
   return (
     <main className="min-h-screen bg-[#F5F7FA] px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
-      <header className="flex flex-wrap items-center justify-between gap-4 border-b border-[#172033]/10 pb-6">
+      <header className="border-b border-[#172033]/10 pb-6">
         <div>
           <ProfessorGreeting />
-          <h1 className="mt-1 text-3xl font-bold text-[#172033]">Projetos</h1>
-          <p className="mt-2 text-sm text-[#172033]/60">Acompanhe os projetos de TCC sob sua orientação.</p>
+          <h1 className="mt-1 text-3xl font-bold text-[#172033]">Projetos dos alunos</h1>
+          <p className="mt-2 text-sm text-[#172033]/60">Acompanhe os projetos criados pelos alunos das suas turmas.</p>
         </div>
-        <Link href="/professor/projetos/novo" className="rounded-xl bg-[#6366F1] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#5558E3]">Criar projeto</Link>
       </header>
       {projetos.length === 0 ? (
         <section className="mt-8 rounded-2xl border border-[#172033]/10 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-bold text-[#172033]">Nenhum projeto cadastrado</h2>
-          <p className="mt-2 text-sm leading-6 text-[#172033]/60">Crie um projeto e selecione os alunos de uma das suas turmas para começar.</p>
+          <p className="mt-2 text-sm leading-6 text-[#172033]/60">Os alunos ainda não criaram projetos nas suas turmas.</p>
         </section>
       ) : (
         <section aria-label="Projetos das suas turmas" className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">

@@ -1,6 +1,8 @@
-﻿import { listarProjetosAluno, type ProjetoAluno } from "@/lib/projeto-aluno";
+﻿import { listarProjetosAluno, listarTurmasAluno, type ProjetoAluno, type TurmaProjetoAluno } from "@/lib/projeto-aluno";
 import { formatarData, labelStatus } from "@/app/professor/projetos/form-config";
 import ProjetoAlunoForm from "./ProjetoAlunoForm";
+import Link from "next/link";
+import CriarProjetoForm from "./CriarProjetoForm";
 
 function DetalhesProjetoAluno({ projeto }: { projeto: ProjetoAluno }) {
   return (
@@ -26,6 +28,9 @@ function DetalhesProjetoAluno({ projeto }: { projeto: ProjetoAluno }) {
               <div className="flex flex-wrap items-start justify-between gap-3"><h4 className="font-semibold">{entrega.titulo}</h4><span className="text-xs font-semibold text-[#172033]/60">{entrega.status === "ativa" ? "Ativa" : "Encerrada"}</span></div>
               {entrega.descricao && <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-[#172033]/70">{entrega.descricao}</p>}
               <p className="mt-2 text-sm text-[#172033]/60">Prazo: {formatarData(entrega.prazo, true)} (Brasília)</p>
+              <Link href={"/aluno/versoes#entrega-" + projeto.id + "-" + entrega.id} className="mt-3 inline-block text-sm font-semibold text-[#6366F1]">
+                {entrega.status === "ativa" ? "Enviar arquivo / Ver versões" : "Ver versões"}
+              </Link>
             </li>
           ))}</ol>
         )}
@@ -36,12 +41,19 @@ function DetalhesProjetoAluno({ projeto }: { projeto: ProjetoAluno }) {
 }
 
 type MeuProjetoPageProps = {
-  searchParams: Promise<{ atualizado?: string | string[] }>;
+  searchParams: Promise<{ atualizado?: string | string[]; criado?: string | string[] }>;
 };
 
+function CriacaoProjeto({ turmas }: { turmas: TurmaProjetoAluno[] }) {
+  if (!turmas.length) return <p className="mt-3 text-sm text-[#172033]/60">Você ainda não entrou em nenhuma turma. Entre em uma turma para criar seu projeto.</p>;
+  return <CriarProjetoForm turmas={turmas} />;
+}
+
 export default async function Page({ searchParams }: MeuProjetoPageProps) {
-  const projetos = await listarProjetosAluno();
+  const [projetos, turmas] = await Promise.all([listarProjetosAluno(), listarTurmasAluno()]);
   const parametros = await searchParams;
+  const turmasComProjeto = new Set(projetos.map((projeto) => projeto.turma_id));
+  const turmasDisponiveis = turmas.filter((turma) => !turmasComProjeto.has(turma.id));
 
   return (
     <main className="min-h-screen bg-[#F5F7FA] px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
@@ -65,12 +77,24 @@ export default async function Page({ searchParams }: MeuProjetoPageProps) {
         </p>
       )}
 
+      {parametros.criado === "1" && (
+        <p role="status" className="mt-6 rounded-xl border border-[#22C55E]/20 bg-[#22C55E]/10 p-4 text-sm text-[#15803D]">
+          Projeto criado com sucesso.
+        </p>
+      )}
+
       {!projetos.length ? (
-        <section className="mt-8 rounded-xl border border-[#172033]/10 bg-white p-6 shadow-sm sm:rounded-2xl">
-          <h2 className="text-lg font-bold text-[#172033]">Nenhum projeto vinculado</h2>
-          <p className="mt-2 text-sm leading-6 text-[#172033]/60">Você ainda não está vinculado a um projeto. Entre em uma turma e aguarde o professor organizar seu projeto.</p>
+        <section className="mt-8">
+          <h2 className="text-xl font-bold text-[#172033]">Crie seu projeto</h2>
+          <p className="mt-2 text-sm text-[#172033]/60">Escolha uma turma da qual você participa e defina o conteúdo acadêmico do seu TCC.</p>
+          <CriacaoProjeto turmas={turmasDisponiveis} />
         </section>
-      ) : projetos.map((projeto) => <DetalhesProjetoAluno key={projeto.id} projeto={projeto} />)}
+      ) : (
+        <>
+          {projetos.map((projeto) => <DetalhesProjetoAluno key={projeto.id} projeto={projeto} />)}
+          {turmasDisponiveis.length > 0 && <section className="mt-8"><h2 className="text-xl font-bold text-[#172033]">Outro projeto</h2><p className="mt-2 text-sm text-[#172033]/60">Você ainda pode criar um projeto em outra turma da qual participa.</p><CriacaoProjeto turmas={turmasDisponiveis} /></section>}
+        </>
+      )}
     </main>
   );
 }

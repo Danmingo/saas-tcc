@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { Suspense } from "react";
-import Cronograma from "./entregas/Cronograma";
 import { notFound } from "next/navigation";
 import ProfessorGreeting from "@/app/professor/components/ProfessorGreeting";
 import { getProfessorContext } from "@/lib/turmas";
@@ -10,7 +8,7 @@ import ProjetoAviso from "../ProjetoAviso";
 
 export default async function DetalhesProjetoPage({ params, searchParams }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ criado?: string; atualizado?: string; entrega?: string }>;
+  searchParams: Promise<{ criado?: string; atualizado?: string }>;
 }) {
   const context = await getProfessorContext();
   const { id } = await params;
@@ -30,8 +28,6 @@ export default async function DetalhesProjetoPage({ params, searchParams }: {
           <h1 className="mt-1 break-words font-[family-name:var(--font-manrope)] text-3xl font-bold">{projeto.titulo === "Projeto sem título" ? "Título ainda não definido pelo aluno" : projeto.titulo}</h1>
           <Link href="/professor/projetos" className="mt-3 inline-block text-sm font-semibold text-[#6366F1] hover:underline">Voltar para projetos</Link>
         </div>
-        <Link href={"/professor/projetos/" + encodeURIComponent(projeto.id) + "/editar"}
-          className="shrink-0 rounded-xl bg-[#6366F1] px-5 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#4F52D9]">Editar projeto</Link>
       </header>
       {(feedback.criado === "1" || feedback.atualizado === "1") && (
         <p role="status" className="mt-6 rounded-xl border border-[#22C55E]/20 bg-[#22C55E]/10 p-4 text-sm text-[#15803D]">
@@ -52,12 +48,9 @@ export default async function DetalhesProjetoPage({ params, searchParams }: {
           <h2 className="font-[family-name:var(--font-manrope)] text-lg font-bold">Integrantes</h2>
           {projeto.integrantes.length ? (
             <ul className="mt-3 space-y-2 text-sm">{projeto.integrantes.map((aluno) => <li key={aluno.id}>{aluno.nome || "Aluno sem nome cadastrado"}</li>)}</ul>
-          ) : <p className="mt-3 text-sm text-[#172033]/60">Nenhum integrante disponível. Use Editar projeto para revisar os vínculos.</p>}
+          ) : <p className="mt-3 text-sm text-[#172033]/60">Nenhum integrante disponível.</p>}
         </div>
       </section>
-      <Suspense fallback={<p role="status" className="mt-8 text-sm text-[#172033]/60">Carregando cronograma...</p>}>
-        <Cronograma context={context} projetoId={projeto.id} feedback={feedback.entrega} />
-      </Suspense>
     </main>
   );
 }

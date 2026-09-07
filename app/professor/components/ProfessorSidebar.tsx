@@ -23,7 +23,7 @@ const menuItems = [
     href: "/professor/projetos",
   },
   {
-    nome: "Entregas",
+    nome: "Envios",
     href: "/professor/entregas",
   },
   {
