@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { STATUS_VERSAO, TIPOS_DEVOLUTIVA, type ResultadoEnvio } from "@/lib/arquivos";
-import { alterarStatus, publicarDevolutiva } from "./actions";
+import { alterarStatus, publicarDevolutiva } from "../actions";
 
 const input = "mt-2 w-full rounded-xl border border-[#172033]/15 bg-white px-3 py-2.5 text-sm text-[#172033]";
 const button = "mt-4 rounded-xl bg-[#6366F1] px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60";

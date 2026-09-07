@@ -1,30 +1,21 @@
-﻿export default function Page() {
+﻿import { TelaEnvios, ErroEnvios } from "@/app/components/EnviosUI";
+import { listarVersoesAluno } from "@/lib/envios";
+import VersaoAlunoCard from "./VersaoAlunoCard";
+
+export default async function Page() {
+  let dados;
+  try {
+    dados = await listarVersoesAluno();
+  } catch (error) {
+    return <TelaEnvios titulo="Versões" descricao="Envie documentos e consulte o histórico das versões do seu TCC."><ErroEnvios mensagem={error instanceof Error ? error.message : "Não foi possível carregar as versões."} /></TelaEnvios>;
+  }
+  const projetoIds = new Set(dados.versoes.map((versao) => versao.projetoId));
+  const projetos = dados.catalogo.projetos.filter((projeto) => projetoIds.has(projeto.id) || dados.catalogo.entregas.some((entrega) => projeto.turma_id === entrega.turma_id));
+  const projetosComEnvios = projetos.length ? projetos : dados.catalogo.projetos;
+
   return (
-    <main className="min-h-screen bg-[#F5F7FA] px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
-      <header className="border-b border-[#172033]/10 pb-6">
-        <p className="text-sm font-medium text-[#6366F1]">
-          Área do aluno
-        </p>
-
-        <h1 className="mt-1 text-3xl font-bold text-[#172033]">
-          Versões
-        </h1>
-
-        <p className="mt-2 text-sm text-[#172033]/60">
-          Envie documentos e consulte o histórico das versões do seu TCC.
-        </p>
-      </header>
-
-      <section className="mt-8 rounded-xl border border-[#172033]/10 bg-white p-4 shadow-sm sm:rounded-2xl sm:p-6">
-        <h2 className="text-lg font-bold text-[#172033]">
-          Página em construção
-        </h2>
-
-        <p className="mt-2 text-sm leading-6 text-[#172033]/60">
-          Esta página já faz parte da navegação do protótipo e receberá
-          suas funcionalidades nas próximas etapas.
-        </p>
-      </section>
-    </main>
+    <TelaEnvios titulo="Versões" descricao="Envie documentos e consulte o histórico das versões do seu TCC.">
+      {!projetosComEnvios.length ? <p className="mt-8 rounded-2xl border border-[#172033]/10 bg-white p-6 text-sm text-[#172033]/60 shadow-sm">Você ainda não está vinculado a um projeto.</p> : projetosComEnvios.map((projeto) => <VersaoAlunoCard key={projeto.id} projeto={projeto} entregas={dados.catalogo.entregas.filter((entrega) => entrega.turma_id === projeto.turma_id)} versoes={dados.versoes.filter((versao) => versao.projetoId === projeto.id)} />)}
+    </TelaEnvios>
   );
 }
