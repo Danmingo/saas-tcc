@@ -2,19 +2,20 @@ import "server-only";
 
 import { getProfessorContext } from "@/lib/turmas";
 import { idValido } from "@/app/professor/projetos/form-config";
+import type { ContextoAcademicoProjeto } from "@/lib/contexto-academico";
 
 export type ProfessorContext = Awaited<ReturnType<typeof getProfessorContext>>;
 export type TurmaProjeto = { id: string; nome: string };
 export type AlunoProjeto = { id: string; nome: string | null };
 export type VinculoProjeto = { id: string; projeto_id: string; aluno_id: string };
-export type Projeto = {
+export type Projeto = ContextoAcademicoProjeto & {
   id: string; turma_id: string; titulo: string; tema: string | null; descricao: string | null;
   status: string; data_inicio: string | null; prazo_final: string | null;
   criado_em: string; atualizado_em: string | null;
 };
 export type ProjetoDetalhes = Projeto & { turma: TurmaProjeto; integrantes: AlunoProjeto[] };
 
-const CAMPOS = "id,turma_id,titulo,tema,descricao,status,data_inicio,prazo_final,criado_em,atualizado_em";
+const CAMPOS = "id,turma_id,titulo,tema,descricao,status,data_inicio,prazo_final,criado_em,atualizado_em,grande_area,curso,subarea,linha_pesquisa,tipo_trabalho,palavras_chave";
 
 export class ProjetoErro extends Error {
   constructor(message: string, public status = 400) {

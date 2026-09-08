@@ -3,6 +3,78 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getAlunoContext } from "@/lib/aluno";
+import { normalizarPalavrasChave } from "@/lib/contexto-academico";
+
+export type ContextoAcademicoFormState = {
+  erro?: string;
+  sucesso?: boolean;
+};
+
+export async function atualizarContextoAcademicoProjetoAluno(
+  projetoUuid: string,
+  _estadoAnterior: ContextoAcademicoFormState,
+  formData: FormData,
+): Promise<ContextoAcademicoFormState> {
+  const { supabase, aluno } = await getAlunoContext();
+  if (typeof projetoUuid !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(projetoUuid)) {
+    return { erro: "Projeto não encontrado ou sem acesso." };
+  }
+
+  const grandeArea = textoForm(formData, "grande_area");
+  const curso = textoForm(formData, "curso");
+  const subarea = textoForm(formData, "subarea");
+  const linhaPesquisa = textoForm(formData, "linha_pesquisa");
+  const tipoTrabalho = textoForm(formData, "tipo_trabalho");
+  const palavrasTexto = textoForm(formData, "palavras_chave");
+  if (grandeArea === null || curso === null || subarea === null || linhaPesquisa === null || tipoTrabalho === null || palavrasTexto === null) {
+    return { erro: "Informe valores válidos nos campos do contexto acadêmico." };
+  }
+  if (!grandeArea) return { erro: "Informe a grande área." };
+  if (!curso) return { erro: "Informe o curso." };
+  const palavrasChave = normalizarPalavrasChave(palavrasTexto);
+  if (palavrasChave.length > 12) return { erro: "Informe no máximo 12 palavras-chave." };
+
+  try {
+    // Qualquer integrante pode editar; a identidade vem somente da sessão.
+    const { data: vinculo, error: vinculoError } = await supabase.from("projeto_alunos")
+      .select("projeto_id").eq("projeto_id", projetoUuid).eq("aluno_id", aluno.id)
+      .maybeSingle<{ projeto_id: string }>();
+    if (vinculoError) return { erro: "Não foi possível verificar sua participação no projeto. Tente novamente." };
+    if (!vinculo) return { erro: "Projeto não encontrado ou sem acesso." };
+
+    const { data, error } = await supabase.rpc("atualizar_contexto_academico_projeto_aluno", {
+      projeto_uuid: projetoUuid,
+      grande_area_texto: grandeArea,
+      curso_texto: curso,
+      subarea_texto: subarea || null,
+      linha_pesquisa_texto: linhaPesquisa || null,
+      tipo_trabalho_texto: tipoTrabalho || null,
+      palavras_chave_texto: palavrasChave,
+    });
+    if (error) return { erro: "Não foi possível salvar o contexto acadêmico. Tente novamente." };
+
+    const resultado = (Array.isArray(data) ? data[0] : data) as { motivo?: string } | null;
+    switch (resultado?.motivo) {
+      case "atualizado": break;
+      case "grande_area_obrigatoria": return { erro: "Informe a grande área." };
+      case "curso_obrigatorio": return { erro: "Informe o curso." };
+      case "muitas_palavras_chave": return { erro: "Informe no máximo 12 palavras-chave." };
+      case "palavra_chave_muito_longa": return { erro: "Uma palavra-chave está muito longa. Reduza seu tamanho e tente novamente." };
+      case "campo_muito_longo": return { erro: "Um dos campos está muito longo. Reduza o texto e tente novamente." };
+      case "sem_acesso":
+      case "projeto_inexistente": return { erro: "Projeto não encontrado ou sem acesso." };
+      case "nao_autenticado":
+      case "papel_invalido": return { erro: "Não foi possível validar seu acesso. Entre novamente como aluno." };
+      default: return { erro: "Não foi possível confirmar a atualização do contexto acadêmico. Tente novamente." };
+    }
+  } catch {
+    return { erro: "Não foi possível confirmar a atualização do contexto acadêmico. Tente novamente." };
+  }
+
+  revalidatePath("/aluno/meu-projeto");
+  revalidatePath(`/professor/projetos/${projetoUuid}`);
+  return { sucesso: true };
+}
 
 export type ProjetoAlunoFormState = {
   erro?: string;

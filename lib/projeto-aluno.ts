@@ -1,6 +1,7 @@
 import "server-only";
 
 import { getAlunoContext } from "@/lib/aluno";
+import type { ContextoAcademicoProjeto } from "@/lib/contexto-academico";
 
 export type TurmaProjetoAluno = {
   id: string;
@@ -17,7 +18,7 @@ export type EntregaAluno = {
   status: "ativa" | "encerrada";
 };
 
-export type ProjetoAluno = {
+export type ProjetoAluno = ContextoAcademicoProjeto & {
   id: string;
   turma_id: string;
   titulo: string;
@@ -95,7 +96,7 @@ export async function listarProjetosAluno(): Promise<ProjetoAluno[]> {
 
   const [{ data: projetos, error: projetosError }, { data: todosVinculos, error: todosVinculosError }] = await Promise.all([
     supabase.from("projetos")
-      .select("id,turma_id,titulo,tema,descricao,status,data_inicio,prazo_final,criado_em,atualizado_em")
+      .select("id,turma_id,titulo,tema,descricao,status,data_inicio,prazo_final,criado_em,atualizado_em,grande_area,curso,subarea,linha_pesquisa,tipo_trabalho,palavras_chave")
       .in("id", projetoIds)
       .returns<ProjetoRegistro[]>(),
     supabase.from("projeto_alunos")

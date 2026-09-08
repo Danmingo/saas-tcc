@@ -1,3 +1,4 @@
+import ContextoAcademico from "@/app/components/ContextoAcademico";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProfessorGreeting from "@/app/professor/components/ProfessorGreeting";
@@ -50,6 +51,10 @@ export default async function DetalhesProjetoPage({ params, searchParams }: {
             <ul className="mt-3 space-y-2 text-sm">{projeto.integrantes.map((aluno) => <li key={aluno.id}>{aluno.nome || "Aluno sem nome cadastrado"}</li>)}</ul>
           ) : <p className="mt-3 text-sm text-[#172033]/60">Nenhum integrante disponível.</p>}
         </div>
+      </section>
+      <section aria-labelledby="contexto-academico-titulo" className="mt-8 max-w-3xl rounded-xl border border-[#172033]/10 bg-white p-4 shadow-sm sm:rounded-2xl sm:p-6">
+        <h2 id="contexto-academico-titulo" className="text-lg font-bold">Contexto acadêmico</h2>
+        <ContextoAcademico contexto={projeto} />
       </section>
     </main>
   );
