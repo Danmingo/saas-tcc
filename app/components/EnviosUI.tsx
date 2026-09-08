@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import ProfessorGreeting from "@/app/professor/components/ProfessorGreeting";
 import { formatarData } from "@/app/professor/projetos/form-config";
 import { STATUS_VERSAO, TIPOS_DEVOLUTIVA } from "@/lib/arquivos";
+import TessQuickActions from "@/app/components/tess/TessQuickActions";
 
 export type VersaoVista = {
   id: string; projetoId: string; turmaId: string; entregaId: string; numero: number;
@@ -67,6 +68,7 @@ export function ListaDevolutivas({ devolutivas, professor = false }: { devolutiv
     <p className="mt-3 text-sm font-semibold text-[#6366F1]">{TIPOS_DEVOLUTIVA.find(([tipo]) => tipo === d.tipo)?.[1] ?? d.tipo}</p>
     <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6">{d.comentario}</p>
     <p className="mt-3 text-xs text-[#172033]/60">{d.professor} · {formatarData(d.data, true)} (Brasília)</p>
+    {!professor && <div className="mt-4"><TessQuickActions role="aluno" contextType="devolutiva" contextId={d.id} label="✨ Explicar com a Tess" /></div>}
     {professor && <Link href={"/professor/entregas/" + encodeURIComponent(d.versao.id)} className="mt-3 inline-block text-sm font-semibold text-[#6366F1]">Abrir versão</Link>}
   </article>)}</div>;
 }

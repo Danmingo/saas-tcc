@@ -1,11 +1,14 @@
-import ContextoAcademico from "@/app/components/ContextoAcademico";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProfessorGreeting from "@/app/professor/components/ProfessorGreeting";
+import ContextoAcademico from "@/app/components/ContextoAcademico";
 import { getProfessorContext } from "@/lib/turmas";
-import { detalhesProjeto, mensagemProjetoErro, ProjetoErro } from "@/lib/projetos";
+import { detalhesProjeto, ProjetoErro } from "@/lib/projetos";
 import { formatarData, labelStatus } from "../form-config";
 import ProjetoAviso from "../ProjetoAviso";
+import PendenciasProjeto from "./PendenciasProjeto";
+import { contextoProfessor, listarPendenciasProfessor, mensagemPendencia } from "@/lib/pendencias";
+import TessQuickActions from "@/app/components/tess/TessQuickActions";
 
 export default async function DetalhesProjetoPage({ params, searchParams }: {
   params: Promise<{ id: string }>;
@@ -14,11 +17,13 @@ export default async function DetalhesProjetoPage({ params, searchParams }: {
   const context = await getProfessorContext();
   const { id } = await params;
   let projeto;
+  let pendencias;
   try {
     projeto = await detalhesProjeto(context, id);
+    pendencias = await listarPendenciasProfessor(await contextoProfessor(), id);
   } catch (error) {
     if (error instanceof ProjetoErro && error.status === 404) notFound();
-    return <ProjetoAviso mensagem={mensagemProjetoErro(error)} />;
+    return <ProjetoAviso mensagem={mensagemPendencia(error)} />;
   }
   const feedback = await searchParams;
   return (
@@ -52,6 +57,8 @@ export default async function DetalhesProjetoPage({ params, searchParams }: {
           ) : <p className="mt-3 text-sm text-[#172033]/60">Nenhum integrante disponível.</p>}
         </div>
       </section>
+      <div className="mt-6"><TessQuickActions role="professor" contextType="projeto" contextId={projeto.id} label="✨ Perguntar à Tess sobre este projeto" /></div>
+      <PendenciasProjeto projetoId={projeto.id} integrantes={projeto.integrantes} pendencias={pendencias} />
       <section aria-labelledby="contexto-academico-titulo" className="mt-8 max-w-3xl rounded-xl border border-[#172033]/10 bg-white p-4 shadow-sm sm:rounded-2xl sm:p-6">
         <h2 id="contexto-academico-titulo" className="text-lg font-bold">Contexto acadêmico</h2>
         <ContextoAcademico contexto={projeto} />

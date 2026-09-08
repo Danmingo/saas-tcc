@@ -34,6 +34,10 @@ const menuItems = [
     nome: "Notificações",
     href: "/professor/notificacoes",
   },
+  {
+    nome: "Tess",
+    href: "/professor/tess",
+  },
 ];
 
 export default function ProfessorSidebar() {

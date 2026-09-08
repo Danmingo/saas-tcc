@@ -1,0 +1,3 @@
+export default function TessStudioErro({ mensagem }: { mensagem: string }) {
+  return <main className="min-h-screen bg-[#F5F7FA] px-4 py-8 text-[#172033] sm:px-6 lg:px-10"><section role="alert" className="max-w-2xl rounded-2xl border border-red-200 bg-white p-6 shadow-sm"><p className="text-sm font-semibold text-red-600">Tess Studio indisponível</p><h1 className="mt-2 text-xl font-bold">Não foi possível carregar as conversas</h1><p className="mt-3 text-sm leading-6 text-[#172033]/70">{mensagem}</p></section></main>;
+}

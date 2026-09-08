@@ -3,6 +3,7 @@ import { formatarData, labelStatus } from "@/app/professor/projetos/form-config"
 import ProjetoAlunoForm from "./ProjetoAlunoForm";
 import Link from "next/link";
 import CriarProjetoForm from "./CriarProjetoForm";
+import TessQuickActions from "@/app/components/tess/TessQuickActions";
 import ContextoAcademico from "@/app/components/ContextoAcademico";
 import ContextoAcademicoForm from "./ContextoAcademicoForm";
 
@@ -37,6 +38,7 @@ function DetalhesProjetoAluno({ projeto }: { projeto: ProjetoAluno }) {
           ))}</ol>
         )}
       </div>
+      <div className="mt-6"><TessQuickActions role="aluno" contextType="projeto" contextId={projeto.id} label="✨ Perguntar à Tess sobre meu TCC" /></div>
       <ProjetoAlunoForm projeto={projeto} />
       <section aria-labelledby={`contexto-titulo-${projeto.id}`} className="mt-6 border-t border-[#172033]/10 pt-6">
         <h3 id={`contexto-titulo-${projeto.id}`} className="text-lg font-bold text-[#172033]">Contexto acadêmico</h3>

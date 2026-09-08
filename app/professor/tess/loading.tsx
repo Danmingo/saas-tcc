@@ -1,0 +1,1 @@
+export default function Loading() { return <main className="min-h-screen bg-[#F5F7FA] px-4 py-8 text-sm text-[#172033]/60">Carregando o Tess Studio...</main>; }

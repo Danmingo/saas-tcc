@@ -9,6 +9,7 @@ const menuItems = [
   { nome: "Dashboard", href: "/aluno/dashboard" },
   { nome: "Meu projeto", href: "/aluno/meu-projeto" },
   { nome: "Tarefas", href: "/aluno/tarefas" },
+  { nome: "Tess", href: "/aluno/tess" },
   { nome: "Versões", href: "/aluno/versoes" },
   { nome: "Devolutivas", href: "/aluno/devolutivas" },
   { nome: "Notificações", href: "/aluno/notificacoes" },

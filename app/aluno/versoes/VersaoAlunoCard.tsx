@@ -3,6 +3,7 @@
 import UploadForm from "./UploadForm";
 import { ListaVersoes } from "@/app/components/EnviosUI";
 import type { EnvioDetalhe } from "@/lib/envios";
+import TessQuickActions from "@/app/components/tess/TessQuickActions";
 
 type Projeto = { id: string; turma_id: string; titulo: string; tema: string | null };
 type Entrega = { id: string; turma_id: string; titulo: string; descricao: string | null; prazo: string | null; status: "ativa" | "encerrada" };
@@ -14,6 +15,7 @@ export default function VersaoAlunoCard({ projeto, entregas, versoes }: {
     <section className="mt-8 rounded-2xl border border-[#172033]/10 bg-white p-4 text-[#172033] shadow-sm sm:p-6">
       <h2 className="break-words text-xl font-bold">{projeto.titulo === "Projeto sem título" ? "Título ainda não definido pelo aluno" : projeto.titulo}</h2>
       <p className="mt-1 break-words text-sm text-[#172033]/60">{projeto.tema || "Tema ainda não informado"}</p>
+      <div className="mt-4"><TessQuickActions role="aluno" contextType="projeto" contextId={projeto.id} label="✨ Perguntar à Tess sobre meu TCC" /></div>
       <div className="mt-6 space-y-6">
         {entregas.length ? entregas.map((entrega) => {
           const historico = versoes.filter((versao) => versao.entregaId === entrega.id);

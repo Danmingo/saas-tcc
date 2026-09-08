@@ -1,0 +1,1 @@
+export { obterSituacaoAluno, obterSituacaoProfessor } from "../situation";

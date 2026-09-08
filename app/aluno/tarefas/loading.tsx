@@ -1,0 +1,1 @@
+export default function Loading() { return <main className="min-h-screen bg-[#F5F7FA] px-4 py-6 sm:px-6 sm:py-8 lg:px-10"><p className="text-sm text-[#172033]/60">Carregando tarefas...</p></main>; }
